@@ -7,7 +7,7 @@ import 'package:time_tracker/sign_in/validators.dart';
 enum EmailSignInFormType { signIn, register }
 
 class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidator {
-   EmailSignInForm({Key key, @required this.auth}) : super(key: key);
+  EmailSignInForm({Key key, @required this.auth}) : super(key: key);
   final AuthBase auth;
 
   @override
@@ -15,19 +15,33 @@ class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidator {
 }
 
 class _EmailSignInFormState extends State<EmailSignInForm> {
-  void _submit() async{
+  void _submit() async {
     _submitted = true;
     _isLoading = true;
 
     try {
-      if(_formType == EmailSignInFormType.signIn){
+      if (_formType == EmailSignInFormType.signIn) {
         await widget.auth.signInWithEmailAndPassword(_email, _password);
-      }else{
+      } else {
         await widget.auth.createAccountWithEmailAndPassword(_email, _password);
       }
       Navigator.of(context).pop();
     } catch (e) {
       print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Sign In failed'),
+              content: Text(e.toString()),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                )
+              ],
+            );
+          });
     } finally {
       setState(() {
         _isLoading = false;
@@ -47,8 +61,9 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   void _emailEditingComplete() {
-    final newFocus = widget.emailValidator.isValid(_email) ?
-        _passwordFocusNode : _emailFocusNode;
+    final newFocus = widget.emailValidator.isValid(_email)
+        ? _passwordFocusNode
+        : _emailFocusNode;
     FocusScope.of(context).requestFocus(newFocus);
   }
 
@@ -76,7 +91,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         : 'Have an account? Sign In';
 
     bool submitEnabled = widget.emailValidator.isValid(_email) &&
-        widget.passwordValidator.isValid(_password) && !_isLoading;
+        widget.passwordValidator.isValid(_password) &&
+        !_isLoading;
 
     return [
       _buildEmailTextField(),
@@ -95,7 +111,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         height: 8.0,
       ),
       TextButton(
-        onPressed: !_isLoading ?_toggleFormType : null,
+        onPressed: !_isLoading ? _toggleFormType : null,
         child: Text(secondaryText),
       ),
     ];
