@@ -3,22 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker/common_widgets/FormSubmitButton.dart';
+import 'package:time_tracker/common_widgets/show_alert_dialog.dart';
 import 'package:time_tracker/services/auth.dart';
 import 'package:time_tracker/sign_in/show_exception_alert_dialog.dart';
 import 'package:time_tracker/sign_in/validators.dart';
 
 enum EmailSignInFormType { signIn, register }
 
-class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidator {
+class EmailSignInFormStateful extends StatefulWidget with EmailAndPasswordValidator {
   @override
-  _EmailSignInFormState createState() => _EmailSignInFormState();
+  _EmailSignInFormStatefulState createState() => _EmailSignInFormStatefulState();
 }
 
-class _EmailSignInFormState extends State<EmailSignInForm> {
-  void _submit() async {
-    _submitted = true;
-    _isLoading = true;
+class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
 
+  String get _email => _controllerEmail.text;
+
+  String get _password => _controllerPassword.text;
+
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
+  EmailSignInFormType _formType = EmailSignInFormType.signIn;
+
+  bool _submitted = false;
+
+  bool _isLoading = false;
+
+  void _submit() async {
+    setState(() {
+      _submitted = true;
+      _isLoading = true;
+    });
     try {
       final auth = Provider.of<AuthBase>(context, listen: false);
       if (_formType == EmailSignInFormType.signIn) {
@@ -28,12 +46,14 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       }
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (e) {
-      showExceptionDialog(
+      showAlertDialog(
         context,
         title: 'Sign In Failed',
-        exception: e,
+        content:  e.message,
+        defaultActionText: 'OK',
       );
-    } finally {
+    }
+     finally {
       setState(() {
         _isLoading = false;
       });
@@ -58,24 +78,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     FocusScope.of(context).requestFocus(newFocus);
   }
 
-  final TextEditingController _controllerEmail = TextEditingController();
-  final TextEditingController _controllerPassword = TextEditingController();
-
-  String get _email => _controllerEmail.text;
-
-  String get _password => _controllerPassword.text;
-
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
-
-  EmailSignInFormType _formType = EmailSignInFormType.signIn;
-
-  bool _submitted = false;
-
-  bool _isLoading = false;
-
   @override
-  void dispose(){
+  void dispose() {
     _controllerEmail.dispose();
     _controllerPassword.dispose();
     _emailFocusNode.dispose();
@@ -132,13 +136,13 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         autocorrect: false,
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.next,
-        onEditingComplete: _emailEditingComplete,
-        onChanged: (email) => _updateState);
+        onChanged: (email) => _updateState,
+        onEditingComplete: _emailEditingComplete);
   }
 
   TextField _buildPasswordTextField() {
     bool showErrorMessage =
-        _submitted && !widget.passwordValidator.isValid(_email);
+        _submitted && !widget.passwordValidator.isValid(_password);
 
     return TextField(
       controller: _controllerPassword,

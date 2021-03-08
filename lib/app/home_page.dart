@@ -19,8 +19,9 @@ class HomePage extends StatelessWidget {
 
   Future<void> _confirmSignOut(BuildContext context) async {
     final didRequestSignOut = await showAlertDialog(
-      context: context,
-      title: 'Logout', content: 'Are you sure you want to logout',
+      context,
+      title: 'Logout',
+      content: 'Are you sure you want to logout',
       cancelActionText: 'Cancel',
       defaultActionText: 'Logout',
     );
