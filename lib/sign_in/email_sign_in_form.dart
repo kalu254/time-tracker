@@ -1,15 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker/common_widgets/FormSubmitButton.dart';
 import 'package:time_tracker/services/auth.dart';
+import 'package:time_tracker/sign_in/show_exception_alert_dialog.dart';
 import 'package:time_tracker/sign_in/validators.dart';
 
 enum EmailSignInFormType { signIn, register }
 
 class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidator {
-  EmailSignInForm({Key key, @required this.auth}) : super(key: key);
-  final AuthBase auth;
-
   @override
   _EmailSignInFormState createState() => _EmailSignInFormState();
 }
@@ -20,28 +20,19 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     _isLoading = true;
 
     try {
+      final auth = Provider.of<AuthBase>(context, listen: false);
       if (_formType == EmailSignInFormType.signIn) {
-        await widget.auth.signInWithEmailAndPassword(_email, _password);
+        await auth.signInWithEmailAndPassword(_email, _password);
       } else {
-        await widget.auth.createAccountWithEmailAndPassword(_email, _password);
+        await auth.createAccountWithEmailAndPassword(_email, _password);
       }
       Navigator.of(context).pop();
-    } catch (e) {
-      print(e);
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Sign In failed'),
-              content: Text(e.toString()),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                )
-              ],
-            );
-          });
+    } on FirebaseAuthException catch (e) {
+      showExceptionDialog(
+        context,
+        title: 'Sign In Failed',
+        exception: e,
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -82,6 +73,15 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   bool _submitted = false;
 
   bool _isLoading = false;
+
+  @override
+  void dispose(){
+    _controllerEmail.dispose();
+    _controllerPassword.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   List<Widget> _buildChildren() {
     final primaryText =
