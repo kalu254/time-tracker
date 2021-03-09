@@ -1,7 +1,9 @@
 
+import 'package:time_tracker/sign_in/validators.dart';
+
 enum EmailSignInFormType { signIn, register }
 
-class EmailSignInModel {
+class EmailSignInModel with EmailAndPasswordValidator {
   EmailSignInModel({
       this.email = '',
       this.password = '',
@@ -15,6 +17,35 @@ class EmailSignInModel {
   final EmailSignInFormType formType;
   final bool isLoading;
   final bool submitted;
+
+  String get primaryButtonText {
+    return formType == EmailSignInFormType.signIn ? 'Sign In' : 'Create Account';
+  }
+
+
+  String get secondaryButtonText {
+    return  formType == EmailSignInFormType.signIn
+        ? 'Need an account? Register'
+        : 'Have an account? Sign In';
+  }
+
+  bool get canSubmit {
+    return emailValidator.isValid(email) &&
+        passwordValidator.isValid(password) &&
+        !isLoading;
+  }
+
+  String get emailErrorText{
+    bool showErrorMessage =
+        submitted && !emailValidator.isValid(email);
+    return showErrorMessage ? invalidEmailValidatorErrorText : null;
+  }
+
+  String get passwordErrorText{
+    bool showErrorMessage =
+        submitted && !passwordValidator.isValid(password);
+    return showErrorMessage ? invalidPasswordValidatorErrorText : null;
+  }
 
   EmailSignInModel copyWith(
       {String email,
@@ -30,4 +61,5 @@ class EmailSignInModel {
       submitted: submitted ?? this.submitted,
     );
   }
+
 }

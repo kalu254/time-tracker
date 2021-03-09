@@ -131,7 +131,7 @@ class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
             labelText: 'Email',
             hintText: 'test@test.com',
             errorText:
-                showErrorMessage ? widget.invalidEmailValidatorError : null,
+                showErrorMessage ? widget.invalidEmailValidatorErrorText : null,
             enabled: _isLoading == false),
         autocorrect: false,
         keyboardType: TextInputType.emailAddress,
@@ -149,7 +149,7 @@ class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
       decoration: InputDecoration(
         labelText: 'Password',
         errorText:
-            showErrorMessage ? widget.invalidPasswordValidatorError : null,
+            showErrorMessage ? widget.invalidPasswordValidatorErrorText : null,
         enabled: _isLoading == false,
       ),
       obscureText: true,

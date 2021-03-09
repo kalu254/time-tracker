@@ -13,6 +13,6 @@ class EmailAndPasswordValidator{
   final StringValidator emailValidator = NonEmptyStringValidator();
   final StringValidator passwordValidator = NonEmptyStringValidator();
 
-  final String invalidEmailValidatorError = 'Email can\'t be empty';
-  final String invalidPasswordValidatorError = 'Password can\'t be empty';
+  final String invalidEmailValidatorErrorText = 'Email can\'t be empty';
+  final String invalidPasswordValidatorErrorText = 'Password can\'t be empty';
 }
