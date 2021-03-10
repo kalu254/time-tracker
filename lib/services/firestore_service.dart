@@ -18,7 +18,12 @@ class FirestoreService{
         ).toList());
   }
 
-  Future<void> setData({String path, Map<String, dynamic> data}) async {
+  Future<void> deleteData({@required String path}) async{
+    final reference = FirebaseFirestore.instance.doc(path);
+    reference.delete();
+  }
+
+  Future<void> setData({@required String path,@required Map<String, dynamic> data}) async {
     print('$path : $data');
     final reference = FirebaseFirestore.instance.doc(path);
     reference.set(data);
