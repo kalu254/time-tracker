@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:time_tracker/app/home/job_entries/format.dart';
 import 'package:time_tracker/app/home/job_entries/input_dropdown.dart';
 
 class DateTimePicker extends StatelessWidget {
@@ -49,10 +50,20 @@ class DateTimePicker extends StatelessWidget {
           flex: 5,
           child: InputDropdown(
             labelText: labelText,
+            valueText: Format.date(selectedDate),
+            valueStyle: valueStyle,
+            onPressed: () => _selectDate(context),
+          ),
+        ),
+        SizedBox(
+          width: 12,
+        ),
+        Expanded(
+          flex: 4,
+          child: InputDropdown(
             valueText: selectedTime.format(context),
             valueStyle: valueStyle,
             onPressed: () => _selectTime(context),
-
           ),
         )
       ],
