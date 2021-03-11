@@ -17,42 +17,17 @@ import 'package:time_tracker/sign_in/show_exception_alert_dialog.dart';
 import 'job_list_tile.dart';
 
 class JobsPage extends StatelessWidget {
-  Future<void> _signOut(BuildContext context) async {
+
+
+  Future<void> _delete(BuildContext context, Job job) async {
+    final database = Provider.of<Database>(context, listen: false);
     try {
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      await auth.signOut();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<void> _confirmSignOut(BuildContext context) async {
-    final didRequestSignOut = await showAlertDialog(
-      context,
-      title: 'Logout',
-      content: 'Are you sure you want to logout',
-      cancelActionText: 'Cancel',
-      defaultActionText: 'Logout',
-    );
-
-    if (didRequestSignOut == true) {
-      _signOut(context);
-    }
-  }
-
-  Future<void> _delete(BuildContext context, Job job)async {
-    final database = Provider.of<Database>(context,listen: false);
-    try{
       await database.deleteJob(job);
-    }on FirebaseException catch(e){
-      showExceptionAlertDialog(
-        context,
-        title: 'Operation failed',
-        exception: e
-      );
+    } on FirebaseException catch (e) {
+      showExceptionAlertDialog(context,
+          title: 'Operation failed', exception: e);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -61,22 +36,16 @@ class JobsPage extends StatelessWidget {
         title: Text('Jobs'),
         centerTitle: true,
         actions: [
-          TextButton(
-              onPressed: () => _confirmSignOut(context),
-              child: Text(
-                'Logout',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.white,
-                ),
-              )),
+          IconButton(
+            onPressed: () => EditJobPage.show(
+              context,
+              database: Provider.of<Database>(context,listen: false)
+            ),
+            icon: Icon(Icons.add),
+          )
         ],
       ),
       body: _buildContents(context),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => EditJobPage.show(context),
-      ),
     );
   }
 
@@ -89,9 +58,11 @@ class JobsPage extends StatelessWidget {
           snapshot: snapshot,
           itemBuilder: (context, job) => Dismissible(
             key: Key('job-${job.id}'),
-            background: Container(color: Colors.red,),
+            background: Container(
+              color: Colors.red,
+            ),
             direction: DismissDirection.endToStart,
-            onDismissed: (direction) => _delete(context,job),
+            onDismissed: (direction) => _delete(context, job),
             child: JobListTile(
               job: job,
               onTap: () => JobEntriesPage.show(context, job),
@@ -101,5 +72,4 @@ class JobsPage extends StatelessWidget {
       },
     );
   }
-
 }
