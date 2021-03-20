@@ -1,4 +1,4 @@
-# time_tracker. It keeps track of the time spent on various job task and calculate the amount earned on each and the total
+# time_tracker. It keeps track of the time spent on various job tasks and calculate the amount earned on each and the total
 #
 Firebase Authentication
 -Facebook sign in
