@@ -1,27 +1,44 @@
 # time_tracker. It keeps track of the time spent on various job tasks and calculate the amount earned on each and the total
 #
 Firebase Authentication
+#
 -Facebook sign in
+#
 -Google sign in
+#
 -Email and Password sign in
+#
 -Anonymous sign in
 #
+#
 Firestore database
+#
 -store job types
+#
 -store job entries
 #
+#
 State management and Dependency injection techniques used
+#
+#
 -stream and stream builders
+#
 -Provider.
+#
 -SetState.
+#
 -BLoC
+#
 -RxDart
+#
 #
 ListViews and multiple UI states
 #
 Date & Time Pickers
 #
 Bottom Navigation
+#
+#
 ![Screenshot_20210320_213938](https://user-images.githubusercontent.com/40164203/111882527-2d832a00-89c7-11eb-998c-df3cb6eca5b0.png)
 #
 ![Screenshot_20210320_214003](https://user-images.githubusercontent.com/40164203/111882541-44c21780-89c7-11eb-9dd7-8041c14e526c.png)
