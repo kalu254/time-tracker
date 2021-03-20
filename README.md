@@ -1,16 +1,28 @@
-# time_tracker
+# time_tracker. It keeps track of the time spent on various job task and calculate the amount earned on each and the total
+#
+Firebase Authentication
+-Facebook sign in
+-Google sign in
+-Email and Password sign in
+-Anonymous sign in
+#
+Firestore database
+-store job types
+-store job entries
+#
+State management and Dependency injection techniques used
+-stream and stream builders
+-Provider.
+-SetState.
+-BLoC
+-RxDart
+#
+ListViews and multiple UI states
+#
+Date & Time Pickers
+#
+Bottom Navigation
 
-A new Flutter application.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
